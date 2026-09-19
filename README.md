@@ -64,7 +64,7 @@ Copy-Item config.example.json config.json
 ## 开发与验证
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest -v test_floating test_cloud_lyrics test_reviews
+.\.venv\Scripts\python.exe -m unittest -v test_floating test_cloud_lyrics test_reviews test_rating_paths
 ```
 
 单元测试只使用临时文件和模拟服务，不写入 JRiver 曲库。发布前还需要检查真实窗口的打开、缩放、托盘、关闭和输入模式，以及目标 JRiver 版本的控制行为。

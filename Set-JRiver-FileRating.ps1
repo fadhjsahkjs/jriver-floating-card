@@ -8,13 +8,25 @@ param(
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)
 try {
+    . (Join-Path $PSScriptRoot 'JRiver-PathIdentity.ps1')
     # Attach only to an already running JRiver. Never launch another library instance.
     $jriverApp = [Runtime.InteropServices.Marshal]::GetActiveObject('MediaJukebox Application')
     $jriverFile = $jriverApp.GetFileByKey($FileKey)
     if ($null -eq $jriverFile -or $jriverFile.GetKey() -ne $FileKey) { throw 'JRiver track identity mismatch.' }
     $get = [Reflection.BindingFlags]::GetProperty
     $filename = [string]$jriverFile.GetType().InvokeMember('Filename',$get,$null,$jriverFile,@())
-    if (-not [string]::Equals($filename,$ExpectedFilename,[StringComparison]::OrdinalIgnoreCase)) {
+    $installDrive = ''
+    if ($ExpectedFilename.StartsWith('(Install Drive):', [StringComparison]::OrdinalIgnoreCase) -or
+        $filename.StartsWith('(Install Drive):', [StringComparison]::OrdinalIgnoreCase)) {
+        # Resolve the placeholder from the running player's executable, never the
+        # system drive or the audio file being compared. Reject multiple instances.
+        $currentSession = [Diagnostics.Process]::GetCurrentProcess().SessionId
+        $players = @(Get-Process -Name 'Media Center *' -ErrorAction SilentlyContinue |
+            Where-Object { $_.SessionId -eq $currentSession -and $_.ProcessName -match '^Media Center \d+$' })
+        if ($players.Count -ne 1 -or -not $players[0].Path) { throw 'Cannot uniquely identify the running JRiver installation.' }
+        $installDrive = [IO.Path]::GetPathRoot($players[0].Path).TrimEnd('\')
+    }
+    if (-not (Test-JRiverFilenameIdentity -Expected $ExpectedFilename -Actual $filename -InstallDrive $installDrive)) {
         throw 'JRiver library identity mismatch. Rating was not changed.'
     }
     $before = [int]$jriverFile.GetType().InvokeMember('Rating',$get,$null,$jriverFile,@())
