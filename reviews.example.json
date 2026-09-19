@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "reviews": [{
+    "filename": "C:/Music/Example Artist/Example Album/01 - Example.flac",
+    "title": "Example",
+    "artist": "Example Artist",
+    "album": "Example Album",
+    "model": "Imported review",
+    "description": "这是一条虚构示例，请替换为自己的曲目和评价。",
+    "comment": "曲评正文。应用只负责显示，不调用模型生成或重算分数。",
+    "final_score": 88.5,
+    "final_star": 5,
+    "final_score_scale": 100,
+    "final_score_source": "My rating system",
+    "final_score_version": "v1",
+    "listening_focus": ["示例聆听提示"]
+  }]
+}

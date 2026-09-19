@@ -1,0 +1,12 @@
+config.json
+reviews.json
+.venv/
+__pycache__/
+*.pyc
+*.log
+dist/
+build/
+.qa/
+*.jks
+*.keystore
+.env

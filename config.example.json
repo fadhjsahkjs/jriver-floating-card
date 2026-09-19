@@ -1,0 +1,8 @@
+{
+  "mcws_url": "http://127.0.0.1:52199/MCWS/v1",
+  "mcws_username": "",
+  "mcws_password": "",
+  "reviews_file": "",
+  "automatic_lyrics": false,
+  "control_center_url": ""
+}
